@@ -17,6 +17,7 @@ const { Title } = Typography;
 function SubscriptionPage() {
   const navigate = useNavigate();
   const [formValues, setFormValues] = useState({});
+
   const [loading, setLoading] = useState(false);
 
   const handleSubscription = useCallback(async () => {
@@ -27,11 +28,31 @@ function SubscriptionPage() {
 
       if (!nome?.valid || !email?.valid || !senha?.valid) return;
 
-      // TODO: implementar request
+      const body = {
+        nome: nome.value,
+        email: email.value,
+        senha: senha.value,
+      };
+
+      await axios.post('/usuarios', body);
+
+      Modal.success({
+        title: 'Cadastro realizado com sucesso!',
+      });
+
+      navigate('/login');
     } catch (error) {
       console.warn(error);
       const { response } = error;
-      // TODO: implementar tratamento de erro
+      if (response && response.status === 422) {
+        Modal.error({
+          title: 'E-mail já cadastrado no banco de dados.',
+        });
+      } else {
+        Modal.error({
+          title: 'Ooopps, não foi possível cadastrar o usuário no momento.',
+        });
+      }
     } finally {
       setLoading(false);
     }
