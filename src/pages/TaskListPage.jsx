@@ -43,7 +43,21 @@ function TaskListPage() {
     try {
       setLoading(true);
 
-      // TODO: implementar
+      let response;
+      if (concluida) {
+        response = await axios.put(`/tarefas/${taskId}/concluida`);
+      } else {
+        response = await axios.put(`/tarefas/${taskId}/pendente`);
+      }
+
+      const { data } = response; // recebe a tarefa atualizada do backend
+
+      const novoTarefas = [...tasks]; // copia o array de tarefas
+      const index = novoTarefas.findIndex((tarefa) => tarefa.id === taskId); // encontra o index
+
+      novoTarefas.splice(index, 1, data); // substitui a tarefa antiga pela atualizada
+
+      setTasks(novoTarefas); // atualiza o estado
     } catch (error) {
       console.warn(error);
       Modal.error({
