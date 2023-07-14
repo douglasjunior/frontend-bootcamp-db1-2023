@@ -20,7 +20,11 @@ function TaskListPage() {
     try {
       setLoading(true);
 
-      // TODO: implementar
+      const response = await axios.get('/tarefas');
+
+      const { data } = response;
+
+      setTasks(data);
     } catch (error) {
       console.warn(error);
       Modal.error({
