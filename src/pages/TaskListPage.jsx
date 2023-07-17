@@ -72,7 +72,14 @@ function TaskListPage() {
     try {
       setLoading(true);
 
-      // TODO: implementar
+      await axios.delete(`/tarefas/${taskId}`);
+
+      const novoTarefas = [...tasks];
+      const index = novoTarefas.findIndex((tarefa) => tarefa.id === taskId);
+
+      novoTarefas.splice(index, 1);
+
+      setTasks(novoTarefas);
     } catch (error) {
       console.warn(error);
       Modal.error({
@@ -125,7 +132,7 @@ function TaskListPage() {
 
             <Table
               dataSource={tasks}
-              pagination={false}
+              pagination
               loading={loading}
               rowKey={(task) => task.id}
             >
